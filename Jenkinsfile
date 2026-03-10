@@ -27,14 +27,24 @@ pipeline {
                 echo "================================================="
                 echo "*** Bước này mô phỏng việc Compile/Build code ***"
                 echo "================================================="
-                sh """
-                    # Đảm bảo user msbuild có quyền trong Workspace
-                    sudo chown -R ${BUILD_USER}:${BUILD_USER} ${WORKSPACE}
+                // sh """
+                //     # Đảm bảo user msbuild có quyền trong Workspace
+                //     sudo chown -R ${BUILD_USER}:${BUILD_USER} ${WORKSPACE}
                     
-                    # Chạy lệnh build giả lập dưới quyền msbuild
-                    sudo -u ${BUILD_USER} echo "Build version 1.0.0" > build_report.txt
-                    sudo -u ${BUILD_USER} ls -la ${WORKSPACE}
-                """
+                //     # Chạy lệnh build giả lập dưới quyền msbuild
+                //     sudo -u ${BUILD_USER} echo "Build version 1.0.0" > build_report.txt
+                //     sudo -u ${BUILD_USER} ls -la ${WORKSPACE}
+                // """
+                sh """
+                        # 1. Đổi chủ sở hữu (Bạn đã làm đúng)
+                        sudo chown -R ${BUILD_USER}:${BUILD_USER} ${WORKSPACE}
+                        
+                        # 2. SỬA LẠI DÒNG NÀY: Chạy cả lệnh ghi file dưới quyền msbuild
+                        sudo -u ${BUILD_USER} bash -c "echo 'Build version 1.0.0' > build_report.txt"
+                        
+                        # 3. Kiểm tra thử
+                        sudo -u ${BUILD_USER} ls -la ${WORKSPACE}
+                    """
             }
         }
 
