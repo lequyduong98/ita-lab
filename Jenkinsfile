@@ -16,8 +16,8 @@ pipeline {
         stage('1. Prepare & Identity') {
             steps {
                 script {
-                    echo "--- Đang chạy trên Node: ${env.NODE_NAME}"
-                    echo "--- User thực thi Jenkins: ${sh(script: 'whoami', returnStdout: true).trim()}"
+                    echo "--- Running on Node: ${env.NODE_NAME}"
+                    echo "--- User Jenkins: ${sh(script: 'whoami', returnStdout: true).trim()}"
                 }
             }
         }
@@ -25,17 +25,17 @@ pipeline {
         stage('2. Build Stage (Acting as msbuild)') {
             steps {
                 echo "================================================="
-                echo "*** Bước này mô phỏng việc Compile/Build code ***"
+                echo "*** Simulation Compile/Build code ***"
                 echo "================================================="
 
                 sh """
-                        # 1. Đổi chủ sở hữu (Bạn đã làm đúng)
+                        # 1. change owner
                         sudo chown -R ${BUILD_USER}:${BUILD_USER} ${WORKSPACE}
                         
-                        # 2. SỬA LẠI DÒNG NÀY: Chạy cả lệnh ghi file dưới quyền msbuild
+                        # 2. write with msbuild
                         sudo -u ${BUILD_USER} bash -c "echo 'Build version 1.0.0' > build_report.txt"
                         
-                        # 3. Kiểm tra thử
+                        # 3. test
                         sudo -u ${BUILD_USER} ls -la ${WORKSPACE}
                     """
             }
